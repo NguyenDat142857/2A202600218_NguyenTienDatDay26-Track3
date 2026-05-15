@@ -1,80 +1,375 @@
 # MCP SQLite Data Server
-Ảnh kết quả ![MCP Inspector](<MCP Inspector.png>)
-## Student
-- **Name:** 2A202600218_NguyenTienDat
+
+![MCP Inspector](MCP%20Inspector.png)
+
+---
+
+# Student Information
+
+- **Name:** Nguyen Tien Dat
 - **Student ID:** 2A202600218
 - **Lab:** FastMCP + SQLite Database Server
 
-## Project Overview
-This repository implements a polished Model Context Protocol server using FastMCP and SQLite. It exposes a small education dataset through three secure MCP tools and two schema resources.
+---
 
-## Included Deliverables
-- `implementation/`: server implementation, database adapter, verification script, unit tests, and helper scripts
-- `pseudocode/`: design notes and pseudocode for the main features
-- `README.md`, `QUICKSTART.md`, `SUBMISSION.md`, `Tips.md`: clean documentation for setup and grading
+# Project Overview
 
-## Features
-- `search`: query rows with filters, ordering, pagination, and selected columns
-- `insert`: create records safely with schema validation
-- `aggregate`: compute `count`, `avg`, `sum`, `min`, `max` with optional grouping
-- `schema://database`: full database schema resource
-- `schema://table/{table_name}`: per-table schema resource
-- secure input validation and parameterized SQL execution
-- sample dataset with students, courses, and enrollments
-- verification script and unit tests
+This repository implements a production-style Model Context Protocol (MCP) server using FastMCP and SQLite.
 
-## Quick Start
+The project demonstrates:
+
+- MCP tool development
+- MCP resource exposure
+- secure SQL execution
+- schema validation
+- SQLite integration
+- MCP client interoperability
+- testing and verification workflows
+
+The server exposes a small educational database through secure MCP tools and schema resources.
+
+---
+
+# Included Deliverables
+
+## Main Deliverables
+
+- `implementation/`
+  - FastMCP server
+  - SQLite adapter
+  - validation layer
+  - database initialization
+  - verification scripts
+  - unit tests
+  - helper scripts
+
+- `pseudocode/`
+  - design notes
+  - architecture planning
+  - implementation pseudocode
+
+- Documentation
+  - `README.md`
+  - `QUICKSTART.md`
+  - `SUBMISSION.md`
+  - `Tips.md`
+
+---
+
+# Features
+
+## MCP Tools
+
+### search
+
+Query rows with:
+
+- filters
+- ordering
+- pagination
+- selected columns
+
+---
+
+### insert
+
+Safely create new records with:
+
+- schema validation
+- type checking
+- parameterized SQL
+
+---
+
+### aggregate
+
+Compute statistics including:
+
+- `count`
+- `avg`
+- `sum`
+- `min`
+- `max`
+
+Supports optional grouping.
+
+---
+
+# MCP Resources
+
+## Full database schema
+
+```txt
+schema://database
+```
+
+---
+
+## Single table schema
+
+```txt
+schema://table/{table_name}
+```
+
+Examples:
+
+```txt
+schema://table/students
+schema://table/courses
+schema://table/enrollments
+```
+
+---
+
+# Security Features
+
+The server includes:
+
+- strict table validation
+- strict column validation
+- supported operator validation
+- supported aggregate validation
+- parameterized SQL queries
+- insert validation
+- safe filtering
+- structured error handling
+
+Unsafe SQL execution is prevented.
+
+---
+
+# Technology Stack
+
+- Python
+- FastMCP
+- SQLite
+- Pytest
+
+---
+
+# Repository Structure
+
+```txt
+implementation/
+├── db.py
+├── init_db.py
+├── mcp_server.py
+├── verify_server.py
+├── requirements.txt
+├── start_inspector.bat
+├── start_inspector.sh
+├── CLIENT_SETUP.md
+├── demo_examples.md
+├── README.md
+│
+├── tests/
+│   └── test_server.py
+│
+└── lab.db
+
+pseudocode/
+├── architecture.md
+├── search_tool.md
+├── insert_tool.md
+└── aggregate_tool.md
+
+README.md
+QUICKSTART.md
+SUBMISSION.md
+Tips.md
+MCP Inspector.png
+```
+
+---
+
+# Installation
+
+## Prerequisites
+
+Install:
+
+- Python 3.8+
+- pip
+- Node.js + npm
+
+---
+
+# Setup Instructions
+
+## 1. Clone Repository
+
 ```bash
-cd implementation
+git clone https://github.com/VinUni-AI20k/Day26-Track3-MCP-tool-integration.git
+```
+
+---
+
+## 2. Navigate to Project
+
+```bash
+cd /c/LabVinUni/2A202600218_NguyenTienDatDay26-Track3/implementation
+```
+
+---
+
+## 3. Install Dependencies
+
+```bash
 pip install -r requirements.txt
+```
+
+---
+
+# Initialize Database
+
+Run:
+
+```bash
 python init_db.py
+```
+
+This creates:
+
+- students table
+- courses table
+- enrollments table
+
+with sample seed data.
+
+---
+
+# Run Verification
+
+```bash
 python verify_server.py
+```
+
+This validates:
+
+- search tool
+- insert tool
+- aggregate tool
+- schema resources
+- validation logic
+- error handling
+
+---
+
+# Start MCP Server
+
+```bash
 python mcp_server.py
 ```
 
-## Run the Server
-- Start the server with: `python mcp_server.py`
-- Inspect the server using `start_inspector.bat` on Windows or `npx @modelcontextprotocol/inspector python mcp_server.py`
-- Connect any MCP-aware client to call the tools and resources
+If successful, the server will expose MCP tools and resources.
 
-## Core Files
-- `implementation/mcp_server.py`: MCP server entry point
-- `implementation/db.py`: SQLite adapter with validation and query execution
-- `implementation/init_db.py`: schema creation and sample seeding
-- `implementation/verify_server.py`: verification script
-- `implementation/tests/test_server.py`: unit tests
-- `implementation/CLIENT_SETUP.md`: client configuration examples
-- `implementation/demo_examples.md`: demo-ready tool examples
+---
 
-## Data Model
-### students
-- `id`, `name`, `cohort`, `email`, `score`
+# Run Unit Tests
 
-### courses
-- `id`, `code`, `name`, `credits`
+Using unittest:
 
-### enrollments
-- `id`, `student_id`, `course_id`, `grade`, `enrolled_date`
+```bash
+python -m unittest tests/test_server.py -v
+```
 
-## Example Requests
-### Search all students
+Or using pytest:
+
+```bash
+pytest
+```
+
+---
+
+# Database Model
+
+# students
+
+| Column | Type |
+|---|---|
+| id | INTEGER |
+| name | TEXT |
+| cohort | TEXT |
+| email | TEXT |
+| score | REAL |
+
+---
+
+# courses
+
+| Column | Type |
+|---|---|
+| id | INTEGER |
+| code | TEXT |
+| name | TEXT |
+| credits | INTEGER |
+
+---
+
+# enrollments
+
+| Column | Type |
+|---|---|
+| id | INTEGER |
+| student_id | INTEGER |
+| course_id | INTEGER |
+| grade | REAL |
+| enrolled_date | TEXT |
+
+---
+
+# MCP Tool Examples
+
+# Tool: search
+
+## Search all students
+
 ```json
 {
   "table": "students"
 }
 ```
 
-### Search cohort A1
+---
+
+## Search cohort A1
+
 ```json
 {
   "table": "students",
   "filters": [
-    {"column": "cohort", "operator": "eq", "value": "A1"}
+    {
+      "column": "cohort",
+      "operator": "eq",
+      "value": "A1"
+    }
   ]
 }
 ```
 
-### Insert a student
+---
+
+## Search students with score >= 85
+
+```json
+{
+  "table": "students",
+  "filters": [
+    {
+      "column": "score",
+      "operator": "gte",
+      "value": 85
+    }
+  ]
+}
+```
+
+---
+
+# Tool: insert
+
+## Insert a new student
+
 ```json
 {
   "table": "students",
@@ -87,7 +382,38 @@ python mcp_server.py
 }
 ```
 
-### Average score by cohort
+---
+
+## Insert a course
+
+```json
+{
+  "table": "courses",
+  "values": {
+    "code": "CS999",
+    "name": "Advanced Topics",
+    "credits": 4
+  }
+}
+```
+
+---
+
+# Tool: aggregate
+
+## Count all students
+
+```json
+{
+  "table": "students",
+  "metric": "count"
+}
+```
+
+---
+
+## Average score by cohort
+
 ```json
 {
   "table": "students",
@@ -97,16 +423,368 @@ python mcp_server.py
 }
 ```
 
-## Resources
-- `schema://database`
-- `schema://table/students`
-- `schema://table/courses`
-- `schema://table/enrollments`
+---
 
-## Notes
-- Re-run `python init_db.py` to reset seed data
-- Use absolute paths for MCP client configs
-- Validate the server locally before client integration
+## Maximum score
 
-## Documentation
-See `implementation/README.md` for more details, usage examples, and troubleshooting.
+```json
+{
+  "table": "students",
+  "metric": "max",
+  "column": "score"
+}
+```
+
+---
+
+## Count students in cohort A1
+
+```json
+{
+  "table": "students",
+  "metric": "count",
+  "filters": [
+    {
+      "column": "cohort",
+      "operator": "eq",
+      "value": "A1"
+    }
+  ]
+}
+```
+
+---
+
+# Supported Filter Operators
+
+| Operator | Description |
+|---|---|
+| eq | equal |
+| ne | not equal |
+| gt | greater than |
+| lt | less than |
+| gte | greater than or equal |
+| lte | less than or equal |
+| like | SQL LIKE |
+| in | value in list |
+
+---
+
+# Supported Aggregate Metrics
+
+| Metric | Description |
+|---|---|
+| count | count rows |
+| avg | average |
+| sum | total |
+| min | minimum |
+| max | maximum |
+
+---
+
+# MCP Resources
+
+## Full schema resource
+
+```txt
+schema://database
+```
+
+---
+
+## Table schema resources
+
+```txt
+schema://table/students
+schema://table/courses
+schema://table/enrollments
+```
+
+---
+
+# MCP Inspector
+
+## Install Inspector
+
+```bash
+npm install -g @modelcontextprotocol/inspector
+```
+
+---
+
+# Start Inspector
+
+## Windows
+
+```bash
+start_inspector.bat
+```
+
+---
+
+## Linux / Mac
+
+```bash
+./start_inspector.sh
+```
+
+---
+
+## Manual command
+
+```bash
+npx @modelcontextprotocol/inspector python mcp_server.py
+```
+
+---
+
+# Gemini CLI Configuration
+
+## Add MCP Server
+
+```bash
+gemini mcp add sqlite-lab \
+python \
+/c/LabVinUni/2A202600218_NguyenTienDatDay26-Track3/implementation/mcp_server.py \
+--description "SQLite FastMCP Server" \
+--timeout 10000
+```
+
+---
+
+## Verify Connection
+
+```bash
+gemini mcp list
+```
+
+Expected:
+
+```txt
+sqlite-lab   Connected
+```
+
+---
+
+## Gemini CLI Example
+
+```bash
+gemini \
+--allowed-mcp-server-names sqlite-lab \
+--yolo \
+-p "Show all students in cohort A1"
+```
+
+---
+
+# Claude Code Configuration
+
+Create `.mcp.json`
+
+```json
+{
+  "mcpServers": {
+    "sqlite-lab": {
+      "type": "stdio",
+      "command": "python",
+      "args": [
+        "/c/LabVinUni/2A202600218_NguyenTienDatDay26-Track3/implementation/mcp_server.py"
+      ]
+    }
+  }
+}
+```
+
+---
+
+# Codex Configuration
+
+Edit:
+
+```txt
+~/.codex/config.toml
+```
+
+Add:
+
+```toml
+[mcp_servers.sqlite_lab]
+command = "python"
+args = ["/c/LabVinUni/2A202600218_NguyenTienDatDay26-Track3/implementation/mcp_server.py"]
+```
+
+---
+
+# Error Handling Examples
+
+# Invalid table
+
+```json
+{
+  "error": "Table 'invalid_table' does not exist"
+}
+```
+
+---
+
+# Invalid column
+
+```json
+{
+  "error": "Column 'invalid_col' does not exist in table 'students'"
+}
+```
+
+---
+
+# Invalid operator
+
+```json
+{
+  "error": "Unsupported operator 'invalid_op'"
+}
+```
+
+---
+
+# Invalid metric
+
+```json
+{
+  "error": "Unsupported metric 'invalid'"
+}
+```
+
+---
+
+# Empty insert
+
+```json
+{
+  "error": "Insert values cannot be empty"
+}
+```
+
+---
+
+# Demo Tasks
+
+This project supports all required rubric demonstrations:
+
+1. Search students in cohort A1
+2. Insert a new student
+3. Count rows in students table
+4. Compute average score by cohort
+5. Read full schema resource
+6. Read students schema resource
+7. Demonstrate invalid request handling
+
+---
+
+# Troubleshooting
+
+# Server does not start
+
+Ensure:
+
+- Python 3.8+ installed
+- dependencies installed
+- database initialized
+
+Run:
+
+```bash
+python init_db.py
+```
+
+---
+
+# Inspector Issues
+
+Ensure:
+
+- Node.js installed
+- npm installed
+
+Try:
+
+```bash
+npm cache clean --force
+```
+
+---
+
+# Database Problems
+
+Delete and recreate database:
+
+```bash
+rm lab.db
+python init_db.py
+```
+
+---
+
+# Development Notes
+
+# Add New Tables
+
+1. Update schema in `init_db.py`
+2. Add seed data
+3. Reinitialize database
+4. Update validation logic
+
+---
+
+# Add New MCP Tools
+
+1. Add `@mcp.tool()`
+2. Implement validation
+3. Add tests
+4. Update README
+
+---
+
+# Add New Resources
+
+1. Add `@mcp.resource()`
+2. Return schema/data
+3. Verify with Inspector
+
+---
+
+# Deliverables Checklist
+
+- FastMCP server
+- SQLite database
+- search tool
+- insert tool
+- aggregate tool
+- schema resources
+- validation and error handling
+- verification script
+- unit tests
+- MCP Inspector support
+- Gemini CLI integration
+- complete documentation
+
+---
+
+# References
+
+- FastMCP Documentation  
+  https://gofastmcp.com/
+
+- MCP Specification  
+  https://modelcontextprotocol.io/
+
+- MCP Inspector  
+  https://modelcontextprotocol.io/docs/tools/inspector
+
+---
+
+# Author
+
+Nguyen Tien Dat  
+Student ID: 2A202600218
+```

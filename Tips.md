@@ -1,22 +1,26 @@
 # MCP Client Tips
 
-These examples are meant to reduce setup friction for students. Replace `/ABSOLUTE/PATH/...` with the real path on the machine.
+A short reference to connect the SQLite MCP server from popular MCP clients.
+
+## Key advice
+- Use absolute paths for the Python executable and server file
+- Install `fastmcp` into the same Python interpreter you will run the server with
+- Reinitialize the database with `python init_db.py` when you want a clean sample dataset
+- Always verify the server with `python verify_server.py` before client integration
 
 ## Claude Code
 
-Anthropic’s current MCP docs are here:
-
+Anthropic MCP docs:
 - https://code.claude.com/docs/en/mcp
 
-Example `.mcp.json`:
-
+Example `.mcp.json` for project-local configuration:
 ```json
 {
   "mcpServers": {
     "sqlite-lab": {
       "type": "stdio",
       "command": "python",
-      "args": ["/ABSOLUTE/PATH/TO/implementation/mcp_server.py"],
+      "args": ["C:/LabVinUni/2A202600218_NguyenTienDatDay26-Track3/implementation/mcp_server.py"],
       "env": {}
     }
   }
@@ -24,126 +28,67 @@ Example `.mcp.json`:
 ```
 
 Tips:
-
-- Use absolute paths to avoid `spawn ... ENOENT` issues.
-- Claude Code supports `@sqlite-lab:schema://database`.
-- If outputs are large, check `MAX_MCP_OUTPUT_TOKENS`.
-
-## Codex
-
-OpenAI’s current MCP doc page for Codex is here:
-
-- https://developers.openai.com/learn/docs-mcp
-
-Example `~/.codex/config.toml`:
-
-```toml
-[mcp_servers.sqlite_lab]
-command = "python"
-args = ["/ABSOLUTE/PATH/TO/implementation/mcp_server.py"]
-```
-
-Tips:
-
-- Keep the server name short and descriptive.
-- Add project instructions in `AGENTS.md` telling the agent when to use the database MCP server.
-- Verify with `codex mcp list` if the CLI version supports it.
-
-Suggested `AGENTS.md` snippet:
-
-```md
-Use the `sqlite_lab` MCP server whenever the task needs database schema context or SQL-backed record lookup.
-```
+- Use absolute paths to avoid `ENOENT` errors
+- If Claude fails to start the server, confirm `python --version`
+- Test resource access with `@sqlite-lab:schema://database`
 
 ## Gemini CLI
 
-Reference:
+Gemini MCP docs:
+- https://github.com/google/gemini/gemini-cli/blob/main/docs/reference/configuration.md
 
-- https://github.com/google-gemini/gemini-cli/blob/main/docs/reference/configuration.md
-
-Recommended setup command:
-
+Add the server:
 ```bash
-gemini mcp add sqlite-lab /ABSOLUTE/PATH/TO/python /ABSOLUTE/PATH/TO/implementation/mcp_server.py --description "SQLite lab FastMCP server" --timeout 10000
+gemini mcp add sqlite-lab python C:/LabVinUni/2A202600218_NguyenTienDatDay26-Track3/implementation/mcp_server.py --description "SQLite Lab MCP server" --timeout 10000
 ```
 
-Then verify:
-
+Verify:
 ```bash
 gemini mcp list
-gemini --allowed-mcp-server-names sqlite-lab --yolo -p "Use the sqlite-lab MCP server and show me the top 2 students by score."
-```
-
-Alternative settings fragment:
-
-```json
-{
-  "mcpServers": {
-    "sqlite-lab": {
-      "command": "python",
-      "args": ["/ABSOLUTE/PATH/TO/implementation/mcp_server.py"],
-      "cwd": "/ABSOLUTE/PATH/TO/implementation",
-      "timeout": 10000,
-      "trust": false
-    }
-  }
-}
+gemini --allowed-mcp-server-names sqlite-lab --yolo -p "Use the sqlite-lab MCP server and show me all students in cohort A1"
 ```
 
 Tips:
+- Use hyphens instead of underscores for the server alias
+- If the server shows as disconnected, increase the timeout and check the path
+- Confirm `fastmcp` is installed in the selected Python interpreter
 
-- Prefer `gemini mcp add` over manual JSON edits.
-- Avoid underscores in Gemini MCP server aliases.
-- Use the exact Python interpreter where `fastmcp` is installed.
-- `gemini mcp list` should show the server as `Connected`.
+## Codex
 
-## Antigravity
+OpenAI Codex MCP docs:
+- https://developers.openai.com/learn/docs-mcp
 
-Antigravity’s MCP behavior changes quickly. In many current setups, the config file is `mcp_config.json` and uses a shape similar to Gemini CLI.
-
-Illustrative config:
-
-```json
-{
-  "mcpServers": {
-    "sqlite-lab": {
-      "command": "python",
-      "args": ["/ABSOLUTE/PATH/TO/implementation/mcp_server.py"],
-      "cwd": "/ABSOLUTE/PATH/TO/implementation"
-    }
-  }
-}
+Example `~/.codex/config.toml`:
+```toml
+[mcp_servers.sqlite_lab]
+command = "python"
+args = ["C:/LabVinUni/2A202600218_NguyenTienDatDay26-Track3/implementation/mcp_server.py"]
 ```
 
-Tips:
-
-- Verify the actual config location from the product UI in your installed version.
-- Prefer stdio first; it is easier for a classroom lab than remote auth.
-- Avoid hardcoding secrets into raw JSON files.
-
-## Inspector
-
-Reference:
-
-- https://modelcontextprotocol.io/docs/tools/inspector
-
-Typical local run:
-
-```bash
-mkdir -p .npm-cache
-NPM_CONFIG_CACHE="$PWD/.npm-cache" npx -y @modelcontextprotocol/inspector /ABSOLUTE/PATH/TO/python /ABSOLUTE/PATH/TO/implementation/mcp_server.py
+Project instructions in `AGENTS.md`:
+```markdown
+Use the `sqlite_lab` MCP server for tasks that require database schema, record lookup, or aggregate calculations.
 ```
 
-If you keep the reference implementation structure, you can also run:
+## MCP Inspector
 
+Use Inspector to browse tools and resources in a browser.
+
+### Windows
 ```bash
 cd implementation
-./start_inspector.sh
+start_inspector.bat
+```
+
+### Linux / Mac
+```bash
+cd implementation
+npx @modelcontextprotocol/inspector python mcp_server.py
 ```
 
 Checklist:
+- Tools appear: `search`, `insert`, `aggregate`
+- Resources appear: `schema://database`, `schema://table/{table_name}`
+- Valid search returns rows
+- Invalid request returns a clear validation error
 
-- tools appear with schemas
-- resources appear
-- valid tool call succeeds
-- invalid tool call returns a clear error
